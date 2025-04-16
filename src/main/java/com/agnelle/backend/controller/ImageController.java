@@ -54,7 +54,7 @@ public class ImageController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getImage() {
+    public ResponseEntity<?> getImages() {
         try {
             Path uploadDirectory = Paths.get("uploads");
 
@@ -64,7 +64,7 @@ public class ImageController {
 
             List<String> imagesUrls = Files.walk(uploadDirectory)
                     .filter(Files::isRegularFile)
-                    .map(path -> "/images/" + path.getFileName().toString())
+                    .map(path -> "http://localhost:8080/api/images/" + path.getFileName().toString())
                     .collect(Collectors.toList());
 
             return ResponseEntity.ok(imagesUrls);

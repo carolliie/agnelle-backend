@@ -28,7 +28,7 @@ public class StorageService {
 
         Files.copy(file.getInputStream(), filePath);
 
-        return "/images/" + fileName;
+        return "http://localhost:8080/api/images/" + fileName;
     }
 
 }

@@ -1,6 +1,7 @@
 package com.agnelle.backend.controller;
 
 import com.agnelle.backend.entity.Category;
+import com.agnelle.backend.entity.CategoryDTO;
 import com.agnelle.backend.service.CategoryService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Category>> getAllCategories() {
+    public ResponseEntity<List<CategoryDTO>> getAllCategories() {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(categoryService.getCategories());
         } catch (Exception e) {

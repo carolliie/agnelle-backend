@@ -9,11 +9,11 @@ import java.util.List;
 
 public interface ProductService {
 
-    Product saveProduct(Product product, MultipartFile[] images) throws IOException;
-    List<Product> getProducts();
+    Product saveProduct(Product product) throws IOException;
+    List<ProductDTO> getProducts();
     Product getProductBySlug(String slug);
     Product getProductById(Long productId);
-    Product editProductBySlug(String slug, ProductDTO productDTO, MultipartFile[] images) throws IOException;
+    Product editProductBySlug(String slug, ProductDTO productDTO) throws IOException;
     Product deleteProductById(Long id);
 
 }

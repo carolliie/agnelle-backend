@@ -1,6 +1,9 @@
 package com.agnelle.backend.service;
 
 import com.agnelle.backend.entity.Category;
+import com.agnelle.backend.entity.CategoryDTO;
+import com.agnelle.backend.entity.Product;
+import com.agnelle.backend.entity.ProductDTO;
 import com.agnelle.backend.repository.CategoryRepository;
 import com.github.slugify.Slugify;
 import jakarta.persistence.EntityNotFoundException;
@@ -10,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryService {
@@ -26,8 +30,21 @@ public class CategoryService {
         return categoryRepository.save(category);
     }
 
-    public List<Category> getCategories() {
-        return categoryRepository.findAll();
+    public List<CategoryDTO> getCategories() {
+
+        List<Category> categories = categoryRepository.findAll();
+
+        List<CategoryDTO> categoryDTOs = categories.stream().map(category -> {
+            CategoryDTO categoryDTO = new CategoryDTO(
+                    category.getId(),
+                    category.getName(),
+                    category.getCategorySlug()
+            );
+
+            return categoryDTO;
+        }).collect(Collectors.toList());
+
+        return categoryDTOs;
     }
 
     public Category getCategoryBySlug(String slug) {

@@ -1,7 +1,8 @@
 package com.agnelle.backend.entity;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
-public record ProductDTO(String name, String size, BigDecimal price, List<String> images, List<Category> categories, String slug) {
+public record ProductDTO(String name, String size, BigDecimal price, Date date, List<String> images, List<String> categories, String slug) {
 }

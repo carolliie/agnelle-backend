@@ -28,36 +28,36 @@ public class ProductServiceImplementation implements ProductService {
 
     @Autowired
     CategoryRepository categoryRepository;
-    @Autowired
-    private StorageService storageService;
 
-    public Product saveProduct(Product product, MultipartFile[] images) throws IOException {
+    public Product saveProduct(Product product) throws IOException {
         String result = slg.slugify(product.getName());
         product.setDate(new Date());
         product.setSlug(result);
 
-        List<Category> categories = product.getCategories().stream()
-                .map(category -> categoryRepository.findByCategorySlug(category.getCategorySlug())
-                        .orElseThrow(() -> new EntityNotFoundException("Category not found: " + category.getCategorySlug())))
-                .collect(Collectors.toList());
-        product.setCategories(categories);
-
-        if (images != null && images.length > 0) {
-            List<String> imageUrls = new ArrayList<>();
-
-            for (MultipartFile image : images) {
-                String imageUrl = storageService.storeImage(image);
-                imageUrls.add(imageUrl);
-            }
-
-            product.setImages(imageUrls);
-        }
-
         return productRepository.save(product);
     }
 
-    public List<Product> getProducts() {
-        return productRepository.findAll();
+    public List<ProductDTO> getProducts() {
+
+        List<Product> products = productRepository.findAll();
+
+        List<ProductDTO> productDTOs = products.stream().map(product -> {
+            ProductDTO productDTO = new ProductDTO(
+                    product.getName(),
+                    product.getSize(),
+                    product.getPrice(),
+                    product.getDate(),
+                    product.getImages(),
+                    product.getCategories().stream()
+                            .map(category -> category.getName())
+                            .collect(Collectors.toList()),
+                    product.getSlug()
+            );
+
+            return productDTO;
+        }).collect(Collectors.toList());
+
+        return productDTOs;
     }
 
     public Product getProductById(Long productId) {
@@ -88,7 +88,7 @@ public class ProductServiceImplementation implements ProductService {
         }
     }
 
-    public Product editProductBySlug(String productSlug, ProductDTO productDto, MultipartFile[] images) throws IOException {
+    public Product editProductBySlug(String productSlug, ProductDTO productDto) throws IOException {
         Optional<Product> optionalProduct = productRepository.findBySlug(productSlug);
         if (optionalProduct.isPresent()) {
             Product product = optionalProduct.get();
@@ -106,22 +106,12 @@ public class ProductServiceImplementation implements ProductService {
             }
             if (productDto.categories() != null) {
                 List<Category> categories = productDto.categories().stream()
-                        .map(category -> categoryRepository.findByCategorySlug(category.getCategorySlug())
+                        .map(category -> categoryRepository.findByCategorySlug(category)
                                 .orElseThrow(() -> new EntityNotFoundException("Category not found: " + category)))
                         .collect(Collectors.toList());
                 product.setCategories(categories);
             }
             if (productDto.images() != null) {
-                if (images != null && images.length > 0) {
-                    List<String> imageUrls = new ArrayList<>();
-
-                    for (MultipartFile image : images) {
-                        String imageUrl = storageService.storeImage(image);
-                        imageUrls.add(imageUrl);
-                    }
-
-                    product.setImages(imageUrls);
-                }
                 product.setImages(productDto.images());
             }
 

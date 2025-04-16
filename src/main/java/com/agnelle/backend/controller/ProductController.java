@@ -3,13 +3,11 @@ package com.agnelle.backend.controller;
 import com.agnelle.backend.entity.Product;
 import com.agnelle.backend.entity.ProductDTO;
 import com.agnelle.backend.service.ProductService;
-import com.agnelle.backend.service.StorageService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -23,9 +21,9 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping
-    public ResponseEntity<?> createProduct(@RequestBody Product product, @RequestParam("images") MultipartFile[] images) {
+    public ResponseEntity<?> createProduct(@RequestBody Product product) {
         try {
-            Product createdProduct = productService.saveProduct(product, images);
+            Product createdProduct = productService.saveProduct(product);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -33,7 +31,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
+    public ResponseEntity<List<ProductDTO>> getAllProducts() {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(productService.getProducts());
         } catch (Exception e) {
@@ -67,9 +65,9 @@ public class ProductController {
     }
 
     @PatchMapping("/edit/{productSlug}")
-    public ResponseEntity<?> editProductBySlug(@PathVariable String productSlug, @RequestBody ProductDTO productDTO, MultipartFile[] images) {
+    public ResponseEntity<?> editProductBySlug(@PathVariable String productSlug, @RequestBody ProductDTO productDTO) {
         try {
-            Product product = productService.editProductBySlug(productSlug, productDTO, images);
+            Product product = productService.editProductBySlug(productSlug, productDTO);
             return ResponseEntity.ok(product);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
