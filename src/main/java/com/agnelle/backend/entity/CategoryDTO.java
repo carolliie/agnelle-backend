@@ -1,4 +1,6 @@
 package com.agnelle.backend.entity;
 
-public record CategoryDTO(Long id, String name, String categorySlug) {
+import java.util.Date;
+
+public record CategoryDTO(Long id, String name, String categorySlug, Date date, String image) {
 }

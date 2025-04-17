@@ -11,7 +11,7 @@ public class EmailSenderService {
     @Autowired
     private JavaMailSender mailSender;
 
-    @Value("${mail.username}")
+    @Value("${mail.username:anacvieira1415@gmail.com}")
     private String fromEmail;
 
     public void sendEmail(String to, String subject, String body) {

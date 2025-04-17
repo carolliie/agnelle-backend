@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,6 +26,7 @@ public class CategoryService {
 
     public Category saveCategory(Category category) throws IOException {
         String result = slg.slugify(category.getName());
+        category.setDate(new Date());
         category.setCategorySlug(result);
 
         return categoryRepository.save(category);
@@ -38,7 +40,9 @@ public class CategoryService {
             CategoryDTO categoryDTO = new CategoryDTO(
                     category.getId(),
                     category.getName(),
-                    category.getCategorySlug()
+                    category.getCategorySlug(),
+                    category.getDate(),
+                    category.getImage()
             );
 
             return categoryDTO;
@@ -76,6 +80,9 @@ public class CategoryService {
                 newCategory.setName(category.getName());
                 String newSlug = slg.slugify(category.getName());
                 category.setCategorySlug(newSlug);
+            }
+            if (category.getImage() != null) {
+                newCategory.setImage(category.getImage());
             }
 
             categoryRepository.save(category);
