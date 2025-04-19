@@ -93,17 +93,19 @@ public class ProductServiceImplementation implements ProductService {
         if (optionalProduct.isPresent()) {
             Product product = optionalProduct.get();
 
-            if (productDto.name() != null) {
+            if (productDto.name() != null && !productDto.name().equals(product.getName())) {
                 product.setName(productDto.name());
                 String newSlug = slg.slugify(productDto.name());
                 product.setSlug(newSlug);
             }
+
             if (productDto.size() != null) {
                 product.setSize(productDto.size());
             }
             if (productDto.price() != null) {
                 product.setPrice(productDto.price());
             }
+
             if (productDto.categories() != null) {
                 List<Category> categories = productDto.categories().stream()
                         .map(category -> categoryRepository.findByCategorySlug(category)
@@ -111,6 +113,7 @@ public class ProductServiceImplementation implements ProductService {
                         .collect(Collectors.toList());
                 product.setCategories(categories);
             }
+
             if (productDto.images() != null) {
                 product.setImages(productDto.images());
             }

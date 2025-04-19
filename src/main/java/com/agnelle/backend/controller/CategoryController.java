@@ -54,10 +54,10 @@ public class CategoryController {
         }
     }
 
-    @DeleteMapping("/delete/{categorySlug}")
-    public ResponseEntity<?> deleteCategory(@PathVariable String categorySlug) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteCategory(@PathVariable Long id) {
         try {
-            Category category = categoryService.deleteCategoryBySlug(categorySlug);
+            Category category = categoryService.deleteCategoryById(id);
             return ResponseEntity.ok("Category deleted successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

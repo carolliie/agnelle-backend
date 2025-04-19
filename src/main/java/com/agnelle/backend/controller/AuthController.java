@@ -7,6 +7,7 @@ import com.agnelle.backend.entity.UserDTO;
 import com.agnelle.backend.repository.UserRepository;
 import com.agnelle.backend.security.TokenResponse;
 import com.agnelle.backend.security.TokenService;
+import com.agnelle.backend.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -32,16 +33,16 @@ public class AuthController {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserService userService;
 
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody @Valid RegisterDTO data) {
         if (userRepository.findByEmail(data.email()) != null) return ResponseEntity.badRequest().build();
 
-        String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
+        User newUser = new User(data.username(), data.email(), data.role(), data.password(), data.bio(), data.profilePicture());
 
-        User newUser = new User(data.username(), data.email(), data.role(), encryptedPassword, data.bio(), data.profilePicture());
-
-        userRepository.save(newUser);
+        userService.registerNewUser(newUser);
 
         return ResponseEntity.ok().build();
     }

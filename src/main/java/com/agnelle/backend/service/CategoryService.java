@@ -60,8 +60,8 @@ public class CategoryService {
         }
     }
 
-    public Category deleteCategoryBySlug(String slug) {
-        Optional<Category> category = categoryRepository.findByCategorySlug(slug);
+    public Category deleteCategoryById(Long id) {
+        Optional<Category> category = categoryRepository.findById(id);
         if (category.isPresent()) {
             categoryRepository.delete(category.get());
             return category.get();
