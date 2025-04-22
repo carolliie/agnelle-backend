@@ -26,6 +26,10 @@ public class StorageService {
         String fileName = file.getOriginalFilename();
         Path filePath = Paths.get(uploadPath, fileName);
 
+        if (Files.exists(filePath)) {
+            throw new IOException("Este arquivo já existe. " + fileName);
+        }
+
         Files.copy(file.getInputStream(), filePath);
 
         return "http://localhost:8080/api/images/" + fileName;
