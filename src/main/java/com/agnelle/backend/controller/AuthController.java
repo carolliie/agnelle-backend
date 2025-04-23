@@ -1,9 +1,6 @@
 package com.agnelle.backend.controller;
 
-import com.agnelle.backend.entity.AuthenticationDTO;
-import com.agnelle.backend.entity.RegisterDTO;
-import com.agnelle.backend.entity.User;
-import com.agnelle.backend.entity.UserDTO;
+import com.agnelle.backend.entity.*;
 import com.agnelle.backend.repository.UserRepository;
 import com.agnelle.backend.security.TokenResponse;
 import com.agnelle.backend.security.TokenService;
@@ -22,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("auth")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class AuthController {
 
     @Autowired
@@ -33,6 +30,7 @@ public class AuthController {
 
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private UserService userService;
 

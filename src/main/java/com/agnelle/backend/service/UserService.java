@@ -87,4 +87,20 @@ public class UserService {
             throw new EntityNotFoundException("user not found or deleted.");
         }
     }
+
+    public User editRegisteredUserPassword(String email, User user) {
+        User optionalUser = userRepository.findByEmail(email);
+
+        if (optionalUser != null) {
+
+            if (optionalUser.getPassword() != null) {
+                optionalUser.setPassword(passwordEncoder.encode(user.getPassword()));
+            }
+
+            userRepository.save(optionalUser);
+            return optionalUser;
+        } else {
+            throw new EntityNotFoundException("user not found or deleted.");
+        }
+    }
 }
