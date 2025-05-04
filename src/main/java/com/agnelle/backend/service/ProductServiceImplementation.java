@@ -43,6 +43,7 @@ public class ProductServiceImplementation implements ProductService {
 
         List<ProductDTO> productDTOs = products.stream().map(product -> {
             ProductDTO productDTO = new ProductDTO(
+                    product.getId(),
                     product.getName(),
                     product.getSize(),
                     product.getPrice(),

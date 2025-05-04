@@ -25,11 +25,15 @@ public class CategoryService {
     CategoryRepository categoryRepository;
 
     public Category saveCategory(Category category) throws IOException {
-        String result = slg.slugify(category.getName());
-        category.setDate(new Date());
-        category.setCategorySlug(result);
+        try {
+            String result = slg.slugify(category.getName());
+            category.setDate(new Date());
+            category.setCategorySlug(result);
 
-        return categoryRepository.save(category);
+            return categoryRepository.save(category);
+        } catch (Exception e) {
+            throw new IOException("Error saving category");
+        }
     }
 
     public List<CategoryDTO> getCategories() {
@@ -76,16 +80,17 @@ public class CategoryService {
         if (optionalCategory.isPresent()) {
             Category newCategory = optionalCategory.get();
 
-            if (category.getName() != null) {
+            if (category.getName() != null && !category.getName().equals(newCategory.getName())) {
                 newCategory.setName(category.getName());
+
                 String newSlug = slg.slugify(category.getName());
-                category.setCategorySlug(newSlug);
+                newCategory.setCategorySlug(newSlug);
             }
             if (category.getImage() != null) {
                 newCategory.setImage(category.getImage());
             }
 
-            categoryRepository.save(category);
+            categoryRepository.save(newCategory);
             return category;
         } else {
             throw new EntityNotFoundException("category not found or deleted.");
